@@ -1,1 +1,18 @@
-/.metadata/
+.metadata/
+
+# Maven
+target/
+
+# Compiled files
+*.class
+
+# Logs
+*.log
+
+# IDE
+*.project
+.classpath
+.settings/
+
+# OS
+.DS_Store

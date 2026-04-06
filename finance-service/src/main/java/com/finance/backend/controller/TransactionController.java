@@ -69,7 +69,7 @@ public class TransactionController {
     	return transactionService.getNetBalance();
     }
     
-    @PreAuthorize("hasAnyRole('ADMIN','ANALYST','VIEWER')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
     @GetMapping("/filter")
     public Object getTransactionByType(
             @RequestParam TransactionType type,
@@ -85,7 +85,7 @@ public class TransactionController {
     
    
      
-    @PreAuthorize("hasAnyRole('ADMIN','ANALYST','VIEWER')")
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
     @GetMapping("/date")
     public List<Transaction> getByDateRange(
             @RequestParam LocalDate start,
@@ -99,25 +99,14 @@ public class TransactionController {
     @PreAuthorize("hasAnyRole('ADMIN','ANALYST','VIEWER')")
     public Object getTransactions(
             @RequestParam(required = false) Integer page,
-            @RequestParam(required = false) Integer size,
-            @RequestParam(required = false) TransactionType type) {
+            @RequestParam(required = false) Integer size) {
 
-        //  Pagination + Filtering
-        if (page != null && size != null && type != null) {
-            return transactionService.getTransactionsByType(type, page, size);
-        }
-
-        //  Only Pagination
+        // Pagination
         if (page != null && size != null) {
             return transactionService.getTransactions(page, size);
         }
 
-        //  Only Filter
-        if (type != null) {
-            return transactionService.getTransactionsByType(type);
-        }
-
-        //  Default → all data
+        // Default → all data
         return transactionService.getAllTransactions();
     }
 }
