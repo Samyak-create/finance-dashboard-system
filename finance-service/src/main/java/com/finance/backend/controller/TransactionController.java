@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.finance.backend.dto.CategoryTrendDTO;
+import com.finance.backend.dto.MonthlyTrendDTO;
+import com.finance.backend.dto.YearlyTrendDTO;
 import com.finance.backend.entities.Transaction;
 import com.finance.backend.enums.TransactionType;
 import com.finance.backend.service.TransactionService;
@@ -108,5 +111,38 @@ public class TransactionController {
 
         // Default → all data
         return transactionService.getAllTransactions();
+    }
+    
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
+    @GetMapping("/trends/monthly")
+    public List<MonthlyTrendDTO> getMonthlyTrends(
+    		@RequestParam(required=false) LocalDate start,
+    		@RequestParam(required=false) LocalDate end
+    		) {
+        if (start == null) start = LocalDate.now().minusMonths(11).withDayOfMonth(1);
+        if (end == null) end = LocalDate.now();
+        return transactionService.getMonthlyTrends(start,end);
+    }
+    
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
+    @GetMapping("/trends/yearly")
+    public List<YearlyTrendDTO> getYearlyTrends(
+    		@RequestParam(required=false) LocalDate start,
+    		@RequestParam(required=false) LocalDate end
+    		) {
+        if (start == null) start = LocalDate.now().minusYears(5);
+        if (end == null) end = LocalDate.now();
+        return transactionService.getYearlyTrends(start,end);
+    }
+    
+    @PreAuthorize("hasAnyRole('ADMIN','ANALYST')")
+    @GetMapping("/trends/category")
+    public List<CategoryTrendDTO> getCategoryTrends(
+    		@RequestParam(required=false) LocalDate start,
+    		@RequestParam(required=false) LocalDate end
+    		) {
+        if (start == null) start = LocalDate.now().minusMonths(1);
+        if (end == null) end = LocalDate.now();
+        return transactionService.getCategoryTrends(start,end);
     }
 }
